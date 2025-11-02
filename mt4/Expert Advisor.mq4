@@ -359,10 +359,10 @@ string SendHttpRequest(string url, string payload)
     int response_code = 0;
     if (payload == "") {
         // GET request
-        response_code = WebRequest("GET", url, headers, timeout, data, result_data, "");
+        response_code = WebRequest("GET", url, headers, timeout, data, result_data, "", "");
     } else {
         // POST request
-        response_code = WebRequest("POST", url, headers, timeout, data, result_data, "");
+        response_code = WebRequest("POST", url, headers, timeout, data, result_data, "", "");
     }
 
     // Check for errors
