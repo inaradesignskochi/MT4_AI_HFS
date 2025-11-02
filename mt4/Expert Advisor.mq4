@@ -336,8 +336,8 @@ void LogTradeToBackend(int ticket, string direction, double lots, double price, 
 string SendHttpRequest(string url, string payload)
 {
     string result = "";
-
-    // Use WebRequest for HTTP communication
+    char data[];
+    char result_data[];
     string headers = "Content-Type: application/json\r\nAuthorization: Bearer " + BackendAPIKey;
 
     // For HTTPS, add to allowed URLs in MT4 options
@@ -350,19 +350,31 @@ string SendHttpRequest(string url, string payload)
     // Reset last error
     ResetLastError();
 
-    // Send request
-    if (payload == "") {
-        // GET request
-        result = WebRequest("GET", url, headers, timeout, "");
-    } else {
-        // POST request
-        result = WebRequest("POST", url, headers, timeout, payload);
+    // Convert payload to char array for WebRequest
+    if (payload != "") {
+        StringToCharArray(payload, data, 0, StringLen(payload));
     }
 
+    // Send request
+    int response_code = 0;
+    if (payload == "") {
+        // GET request
+        response_code = WebRequest("GET", url, headers, timeout, data, result_data, "");
+    } else {
+        // POST request
+        response_code = WebRequest("POST", url, headers, timeout, data, result_data, "");
+    }
+
+    // Check for errors
     int error = GetLastError();
     if (error != 0) {
         Print("HTTP request failed with error: ", error);
         return "";
+    }
+
+    // Convert response back to string
+    if (ArraySize(result_data) > 0) {
+        result = CharArrayToString(result_data, 0, ArraySize(result_data));
     }
 
     return result;
