@@ -23,8 +23,8 @@
  */
 
 //--- Input Parameters
-input string   BackendURL      = "https://ai-trading-backend-xqzn.onrender.com"; // Backend server URL
-input string   BackendAPIKey   = "rnd_ErEnOqvUoRsSMIL8N5TgHjAHJKHy";     // API authentication key
+input string   BackendURL      = "https://ai-trading-backend-m1k7.onrender.com";  // Backend server URL
+input string   BackendAPIKey   = "production";    // API authentication key
 input string   Symbol          = "EURUSD";                               // Trading symbol
 input double   LotSize         = 0.01;                                   // Position size
 input int      MaxSpread       = 20;                                     // Maximum spread in points
