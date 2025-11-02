@@ -59,9 +59,9 @@ int OnInit()
         isConnected = false;
     }
 
-    // Initialize indicators if needed
-    rsiHandle = iRSI(Symbol, PERIOD_M1, 14, PRICE_CLOSE);
-    macdHandle = iMACD(Symbol, PERIOD_M1, 12, 26, 9, PRICE_CLOSE);
+    // Initialize indicators if needed (commented out as not currently used)
+    // rsiHandle = iRSI(Symbol, PERIOD_M1, 14, PRICE_CLOSE);
+    // macdHandle = iMACD(Symbol, PERIOD_M1, 12, 26, 9, PRICE_CLOSE);
 
     return(INIT_SUCCEEDED);
 }
@@ -359,10 +359,10 @@ string SendHttpRequest(string url, string payload)
     int response_code = 0;
     if (payload == "") {
         // GET request
-        response_code = WebRequest("GET", url, headers, timeout, data, result_data, "");
+        response_code = WebRequest("GET", url, "", headers, timeout, data, result_data, "");
     } else {
         // POST request
-        response_code = WebRequest("POST", url, headers, timeout, data, result_data, "");
+        response_code = WebRequest("POST", url, "", headers, timeout, data, result_data, "");
     }
 
     // Check for errors
