@@ -20,7 +20,7 @@ export const getMarketAnalysis = async (apiKey: string): Promise<string> => {
     try {
         const ai = new GoogleGenerativeAI(apiKey);
 
-        const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = ai.getGenerativeModel({ model: 'gemini-1.5-pro' });
         const newsHeadlines = await getRealtimeNews();
         const prompt = `
             You are a concise financial analyst for a high-frequency scalping trading system.

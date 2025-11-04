@@ -260,6 +260,22 @@ def get_recent_trades(limit: int = 10):
         logger.error(f"Error getting recent trades: {e}")
         return []
 
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint for basic connectivity check."""
+    return jsonify({
+        'status': 'AI Trading Backend Running',
+        'message': 'Use /api/health for detailed health check',
+        'endpoints': [
+            'GET /api/health',
+            'POST /api/ticks',
+            'GET /api/signals',
+            'POST /api/signals',
+            'POST /api/trades',
+            'GET /api/dashboard/stream'
+        ]
+    })
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint."""
