@@ -20,7 +20,7 @@ export const getMarketAnalysis = async (apiKey: string): Promise<string> => {
     try {
         const ai = new GoogleGenerativeAI(apiKey);
 
-        const model = ai.getGenerativeModel({ model: 'gemini-1.5-pro' });
+        const model = ai.getGenerativeModel({ model: 'gemini-2.5-flash-preview-09-2025' });
         const newsHeadlines = await getRealtimeNews();
         const prompt = `
             You are a concise financial analyst for a high-frequency scalping trading system.
@@ -55,4 +55,5 @@ export const getMarketAnalysis = async (apiKey: string): Promise<string> => {
         return `Error: Could not retrieve AI market analysis. (${error.message})`;
     }
 };
+
 
