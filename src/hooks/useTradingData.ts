@@ -26,7 +26,7 @@ export const useTradingData = () => {
 
         eventSource.onerror = (error) => {
             console.error('EventSource error:', error);
-            setSystemStatus('OFFLINE');
+            setSystemStatus('DEGRADED');
         };
 
         eventSource.addEventListener('metrics', (event) => {
