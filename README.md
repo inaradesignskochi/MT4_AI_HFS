@@ -16,6 +16,8 @@ A modern React-based dashboard for high-frequency forex scalping trading with AI
 - **AI Integration**: Google Gemini API
 - **Build Tool**: Create React App
 - **Deployment**: Netlify (static hosting)
+- **Backend**: Flask API on Render
+- **Database**: PostgreSQL on Render
 
 ## Quick Start
 
@@ -27,7 +29,7 @@ A modern React-based dashboard for high-frequency forex scalping trading with AI
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/inaradesignskochi/MT4_AI_HFS.git
 cd money
 
 # Install dependencies
@@ -45,47 +47,98 @@ npm run build
 
 ## Deployment
 
-### Netlify (Recommended)
+### Frontend (Netlify)
+The frontend is automatically deployed to Netlify when code is pushed to the main branch.
 
-1. **Connect Repository**:
-   - Push code to GitHub
-   - Go to [Netlify](https://netlify.com) and connect your repository
-   - Netlify will auto-detect the `netlify.toml` configuration
+**Live URL:** https://super-halva-7f98bf.netlify.app/
 
-2. **Manual Deploy**:
-   ```bash
-   npm install -g netlify-cli
-   netlify login
-   netlify deploy --prod --dir=build
-   ```
+### Backend (Render)
+The backend is deployed on Render and provides the following API endpoints:
 
-### Docker
-
+#### Health Check
 ```bash
-# Build image
-docker build -t trading-dashboard .
-
-# Run container
-docker run -p 3000:3000 trading-dashboard
+curl https://ai-trading-backend-m1k7.onrender.com/api/health
 ```
+
+#### API Endpoints
+- `GET /api/health` - Health check
+- `POST /api/ticks` - Receive tick data from MT4
+- `GET /api/signals` - Get trading signals for MT4
+- `POST /api/trades` - Log executed trades
+- `GET /api/dashboard/stream` - Real-time dashboard data (SSE)
 
 ## Configuration
 
-### Environment Variables
+### Frontend Settings
+Access the Settings page in the deployed app to configure:
 
-Create a `.env` file in the root directory:
-
-```env
-REACT_APP_GEMINI_API_KEY=your_gemini_api_key_here
-REACT_APP_BACKEND_API_URL=http://your-backend-server:5000
+```
+GCP VM IP: https://ai-trading-backend-m1k7.onrender.com
+Backend API Key: production
+Gemini API Key: AIzaSyBoHx9EG1ff7Hfb5XQwn1sHQMquHZp9z_g
+Lot Size: 0.01
+Max Positions: 3
+Max Daily Loss: 50
+Max Spread Pips: 2.0
+Tick Batch Size: 500
+Signal Poll Interval Ms: 500
 ```
 
-### Settings
+## MT4 Integration
 
-Access the Settings page in the app to configure:
-- GCP VM IP address
-- API keys
-- Trading parameters (lot size, max positions, etc.)
+### Download Expert Advisor
+```
+https://raw.githubusercontent.com/inaradesignskochi/MT4_AI_HFS/main/mt4/Expert%20Advisor.mq4
+```
+
+### MT4 Configuration
+1. **Tools → Options → Expert Advisors**
+2. ✅ Allow automated trading
+3. ✅ Allow WebRequest for: `https://ai-trading-backend-m1k7.onrender.com`
+4. **Attach EA to EURUSD chart**
+5. **Set EnableTrading: false** first for testing
+
+## Docker
+
+### Build and Run
+```bash
+# Build image
+docker build -t ai-trading-frontend .
+
+# Run container
+docker run -p 3000:80 ai-trading-frontend
+```
+
+## Testing API Endpoints
+
+### Using curl (Windows PowerShell)
+```powershell
+# Health check
+curl -Uri "https://ai-trading-backend-m1k7.onrender.com/api/health"
+
+# Test with headers
+$headers = @{"Content-Type" = "application/json"}
+$body = '{"ticks": [{"timestamp": 1234567890, "bid": 1.0500, "ask": 1.0502, "spread": 2, "volume": 100}], "symbol": "EURUSD"}'
+Invoke-WebRequest -Uri "https://ai-trading-backend-m1k7.onrender.com/api/ticks" -Method POST -Headers $headers -Body $body
+```
+
+### Using JavaScript (Browser Console)
+```javascript
+// Health check
+fetch('https://ai-trading-backend-m1k7.onrender.com/api/health')
+  .then(r => r.json())
+  .then(d => console.log(d));
+
+// Test tick data
+fetch('https://ai-trading-backend-m1k7.onrender.com/api/ticks', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    ticks: [{timestamp: Date.now(), bid: 1.0500, ask: 1.0502, spread: 2, volume: 100}],
+    symbol: 'EURUSD'
+  })
+}).then(r => r.json()).then(d => console.log(d));
+```
 
 ## Project Structure
 
@@ -108,21 +161,20 @@ money/
 │   ├── types.ts
 │   ├── App.tsx
 │   └── index.tsx
+├── mt4/
+│   └── Expert Advisor.mq4
 ├── Dockerfile
 ├── netlify.toml
 ├── package.json
 └── README.md
 ```
 
-## Backend Requirements
+## Security
 
-This frontend requires a backend API server for full functionality. See the `deploy.sh` script for the complete backend deployment setup including:
-
-- Flask API server
-- SQLite database
-- Feature engineering service
-- Signal generation service
-- Nginx reverse proxy
+- API keys are stored securely in browser localStorage
+- Backend validates all incoming requests
+- CORS is properly configured for frontend-backend communication
+- Input validation prevents injection attacks
 
 ## Contributing
 
