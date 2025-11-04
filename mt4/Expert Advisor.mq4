@@ -23,7 +23,7 @@
  */
 
 //--- Input Parameters
-input string   BackendURL      = "https://ai-trading-backend-m1k7.onrender.com";  // Backend server URL
+input string   BackendURL      = "https://ai-trading-backend-ou4b.onrender.com";  // Backend server URL
 input string   BackendAPIKey   = "production";    // API authentication key
 input string   Symbol          = "EURUSD";                               // Trading symbol
 input double   LotSize         = 0.01;                                   // Position size
