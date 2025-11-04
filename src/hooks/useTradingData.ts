@@ -12,13 +12,20 @@ export const useTradingData = () => {
     const [settings] = useSettings();
 
     useEffect(() => {
+        // Only connect if backend URL is configured
+        if (!settings.gcpVmIp || settings.gcpVmIp.trim() === '') {
+            setSystemStatus('OFFLINE');
+            return;
+        }
+
         const eventSource = new EventSource(`${settings.gcpVmIp}/api/dashboard/stream`);
 
         eventSource.onopen = () => {
             setSystemStatus('OPERATIONAL');
         };
 
-        eventSource.onerror = () => {
+        eventSource.onerror = (error) => {
+            console.error('EventSource error:', error);
             setSystemStatus('DEGRADED');
         };
 
